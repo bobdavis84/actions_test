@@ -1,0 +1,55 @@
+name: Update Timestamp File
+
+run-name: ${{ github.actor }} ran this as a test.
+
+on:
+
+  push:
+
+    branches:
+
+      - main
+
+jobs:
+
+  update-log-file:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+
+      contents: write
+
+    steps:
+
+      - name: Check out code
+
+        uses: actions/checkout@v4
+
+      - name: Update timestamp file
+
+        run: |
+
+          # The '>>' appends the new date to the file, creating a log
+
+          date >> timestamp.log
+
+      - name: Configure Git
+
+        run: |
+
+          git config --global user.name 'GitHub Action'
+
+          git config --global user.email 'action@github.com'
+
+      - name: Commit and Push
+
+        run: |
+
+          git add timestamp.log
+
+          # The '|| exit 0' part prevents the workflow from failing if there are no changes to commit
+
+          git commit -m "Update timestamp log" || exit 0
+
+          git push
